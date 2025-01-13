@@ -57,7 +57,7 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
       <Droppable key={heading} droppableId={heading}>
         {(provided) => (
           <ul
-            className="rounded-xl h-[500px] overflow-y-scroll hide-scrollbar bg-white dark:bg-gray-800"
+            className="rounded-xl h-[580px] overflow-y-scroll hide-scrollbar bg-white dark:bg-gray-800"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
@@ -103,15 +103,15 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
                     >
                       {task.priority}
                     </p>
-                    {task.date && (
+                    {task.deadline && (
                       <p
                         className={`text-gray-500 dark:text-gray-400 inline-flex gap-2 mt-2 ${
-                          new Date(task.date) < new Date() ? "text-red-500" : ""
+                          new Date(task.deadline) < new Date() ? "text-red-500" : ""
                         }`}
                       >
                         <DateSvg />
-                        {task.date}
-                        {new Date(task.date) < new Date() && (
+                        {task.deadline}
+                        {new Date(task.deadline) < new Date() && (
                           <span className="ml-2">(Deadline passed)</span>
                         )}
                       </p>

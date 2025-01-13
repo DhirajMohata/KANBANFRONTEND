@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SignInPage from '../pages/auth/login/page.tsx';
 import SignUpPage from '../pages/auth/signup/page.tsx';
-import Dashboard from '../pages/dashboard/page.tsx';
 import Home from '../pages/home/page.tsx';
 import AdminDashboard from '../pages/admin/page.tsx';
 import ShowTaskPage from '../components/admin/ShowTaskPage.tsx';
@@ -19,7 +18,6 @@ const AppRouter: React.FC = () => {
                     <Route path="signup" element={<SignUpPage />} />
                 </Route>
                 
-                <Route path="/dashboard" element={<Dashboard />} />
 
                 <Route path="/admin">
                     <Route path="" element = {<AdminDashboard/>} />
@@ -27,7 +25,7 @@ const AppRouter: React.FC = () => {
                 </Route>
                 <Route path="/manager" element={<ManagerDashboard />} />
                 <Route path='/user' element={<UserDashboard />} />
-                <Route path="*" element={<h1>Not Found</h1>} />
+          
             </Routes>
         </Router>
     );

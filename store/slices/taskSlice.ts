@@ -1,53 +1,48 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {Task } from '../../types/tasks/task';
-import { TaskForAddTask } from '../../types/tasks/addTask';
+import { Task } from '../../types/tasks/task';
 import { initialState } from '../initialStates/taskState';
 
-
-const priorityOrder: Record<string, number> = {
-    Low: 1,
-    Medium: 2,
-    Urgent: 3,
-};
 
 const getUniqueID = () => {
     return Math.random().toString(36).substr(2, 9);
 }
+
 const taskSlice = createSlice({
-    name: 'auth',
+    name: 'tasks',
     initialState,
     reducers: {
-        addTask: (state, action: PayloadAction<TaskForAddTask>) => {
+        addTask: (state, action: PayloadAction<Task>) => {
             action.payload._id = getUniqueID();
             state.tasks = [...state.tasks, action.payload];
         },
-        updateTask: (state, action: PayloadAction<{ taskId: string; status: string }>) => {
+        updateTask: (state, action: PayloadAction<{ taskId: string; status: 'To Do' | 'In Progress' | 'Under Review' | 'Finished' }>) => {
             state.tasks = state.tasks.map((task) =>
                 task._id === action.payload.taskId ? { ...task, status: action.payload.status } : task
             );
         },
-        updateTaskContent: (state, action: PayloadAction<Task>) => {
-            console.log(action.payload);
+        addComment: (state, action: PayloadAction<{ taskId: string; comment: { user: string; comment: string } }>) => {
             state.tasks = state.tasks.map((task) =>
-                task._id === action.payload._id ? action.payload : task
+                task._id === action.payload.taskId
+                    ? { ...task, comments: [...(task.comments || []), { ...action.payload.comment, created_at: new Date().toISOString() }] }
+                    : task
             );
-            console.log(state.tasks);
         },
-        deleteTask: (state, action: PayloadAction<string>) => {
-            state.tasks = state.tasks.filter((task) => task._id !== action.payload);
+        addLog: (state, action: PayloadAction<{ taskId: string; log: { action: string; user: string } }>) => {
+            state.tasks = state.tasks.map((task) =>
+                task._id === action.payload.taskId
+                    ? { ...task, logs: [...(task.logs || []), { ...action.payload.log, created_at: new Date().toISOString() }] }
+                    : task
+            );
         },
-        filterTaksCustom: (state, action: PayloadAction<string>) => {
-            state.tasks = state.tasks.filter((task) => task.priority === action.payload);
-        },
-        sortTasksCustom: (state) => {
-            state.tasks = state.tasks.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
-        },
-        deleteAllTasks: (state) => {
-            state.tasks = [];
+        addSubTask: (state, action: PayloadAction<{ taskId: string; subTaskId: string }>) => {
+            state.tasks = state.tasks.map((task) =>
+                task._id === action.payload.taskId
+                    ? { ...task, subTasks: [...(task.subTasks || []), action.payload.subTaskId] }
+                    : task
+            );
         },
     },
-  });
-  
-  export const { addTask, updateTask, updateTaskContent, deleteTask, sortTasksCustom, filterTaksCustom, deleteAllTasks} = taskSlice.actions;
+});
 
-  export default taskSlice.reducer;
+export const { addTask, updateTask, addComment, addLog, addSubTask } = taskSlice.actions;
+export default taskSlice.reducer;

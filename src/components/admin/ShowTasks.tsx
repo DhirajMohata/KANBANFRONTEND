@@ -11,7 +11,8 @@ const initialTasks = [
     description: "Description 1",
     status: "To Do",
     priority: "Urgent",
-    date: new Date().toISOString(),
+    deadline: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
     assigned_to: "user1"
   },
   {
@@ -21,7 +22,8 @@ const initialTasks = [
     description: "Description 2",
     status: "In Progress",
     priority: "Medium",
-    date: new Date().toISOString(),
+    deadline: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
     assigned_to: "user3"
   },
   {
@@ -31,7 +33,8 @@ const initialTasks = [
     description: "Description 3",
     status: "Under Review",
     priority: "Low",
-    date: new Date().toISOString(),
+    deadline: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
     assigned_to: "user1"
   },
   {
@@ -41,7 +44,8 @@ const initialTasks = [
     description: "Description 4",
     status: "Finished",
     priority: "Urgent",
-    date: new Date().toISOString(),
+    deadline: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
     assigned_to: "user2"
   },
 ];
