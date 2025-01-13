@@ -24,7 +24,7 @@ const initialTasks = [
     priority: "Medium",
     deadline: new Date().toISOString(),
     createdAt: new Date().toISOString(),
-    assigned_to: "user3"
+    assigned_to: "user1"
   },
   {
     id: "3",
@@ -46,7 +46,7 @@ const initialTasks = [
     priority: "Urgent",
     deadline: new Date().toISOString(),
     createdAt: new Date().toISOString(),
-    assigned_to: "user2"
+    assigned_to: "user1"
   },
 ];
 
