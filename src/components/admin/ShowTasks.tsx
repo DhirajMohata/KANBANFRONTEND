@@ -2,70 +2,40 @@ import React, { useState, useEffect } from "react";
 import TaskTable from "./TaskTable.tsx";
 import { DragDropContext } from "react-beautiful-dnd";
 import Filters from "../layouts/filter.tsx";
+import { getTasksByProject } from "../../../actions/taskActions/get.ts";
+import { updateTask } from "../../../actions/taskActions/update.ts";
 
-const initialTasks = [
-  {
-    id: "1",
-    _id: "1",
-    title: "Task 1",
-    description: "Description 1",
-    status: "To Do",
-    priority: "Urgent",
-    deadline: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    assigned_to: "user1"
-  },
-  {
-    id: "2",
-    _id: "2",
-    title: "Task 2",
-    description: "Description 2",
-    status: "In Progress",
-    priority: "Medium",
-    deadline: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    assigned_to: "user3"
-  },
-  {
-    id: "3",
-    _id: "3",
-    title: "Task 3",
-    description: "Description 3",
-    status: "Under Review",
-    priority: "Low",
-    deadline: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    assigned_to: "user1"
-  },
-  {
-    id: "4",
-    _id: "4",
-    title: "Task 4",
-    description: "Description 4",
-    status: "Finished",
-    priority: "Urgent",
-    deadline: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    assigned_to: "user2"
-  },
-];
-
-const Tasks: React.FC = () => {
-  const [tasks, setTasks] = useState(initialTasks);
+const Tasks = ( AddTask : boolean) => {
+  const [tasks, setTasks] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("");
   const [userFilter, setUserFilter] = useState("");
   const [filteredTasks, setFilteredTasks] = useState(tasks);
 
-  const toDoTasks = filteredTasks.filter((task) => task.status === "To Do");
+
+  async function fetchTasks() {
+    const productId = localStorage.getItem("projectId");
+
+    if (!productId) return;
+    const response = await getTasksByProject(productId);
+
+    if(!response ||  !Array.isArray(response)) return;
+    setTasks(response);
+  }
+
+  useEffect(() => {
+    fetchTasks();
+  } , [AddTask]);
+
+  const toDoTasks = filteredTasks.filter((task) => task.status === "todo");
   const inProgressTasks = filteredTasks.filter(
-    (task) => task.status === "In Progress"
+    (task) => task.status === "inprogress"
   );
   const underReviewTasks = filteredTasks.filter(
-    (task) => task.status === "Under Review"
+    (task) => task.status === "underreview"
   );
   const finishedTasks = filteredTasks.filter(
-    (task) => task.status === "Finished"
+    (task) => task.status === "finished"
   );
 
   const updateTaskStatus = (taskId: string, newStatus: string) => {
@@ -78,7 +48,7 @@ const Tasks: React.FC = () => {
 
   const onDragEnd = (result: any) => {
     const { destination, source, draggableId } = result;
-
+ 
     if (!destination) {
       return;
     }
@@ -91,6 +61,10 @@ const Tasks: React.FC = () => {
     }
 
     updateTaskStatus(draggableId, destination.droppableId);
+    var status = destination.droppableId;
+    status = status === "To Do" ? "todo" : status === "In Progress" ? "inprogress" : status === "Under Review" ? "underreview" : "finished";
+
+    updateTask({ taskId: draggableId, status: status });
   };
 
   const handleSearch = (search: string) => {

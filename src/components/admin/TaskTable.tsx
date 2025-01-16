@@ -9,7 +9,7 @@ import { LuHistory } from "react-icons/lu";
 import ShowLogs from "../layouts/showLogs";
 import ShowComments from "../layouts/showComments";
 
-const TaskTable = ({ heading, tasks }: Taskboard) => {
+const   TaskTable = ({ heading, tasks }: Taskboard) => {
     const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
     const [editTask, setEditTask] = useState<Task | null>(null);
     const [isShowLogsOpen, setIsShowLogsOpen] = useState(false);
@@ -65,11 +65,11 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
 
     function getPriorityColor(priority: string) {
         switch (priority) {
-            case "Low":
+            case "low":
                 return "bg-[#0ECC5A]";
-            case "Medium":
+            case "medium":
                 return "bg-[#FFA235]";
-            case "Urgent":
+            case "urgent":
                 return "bg-[#FF6B6B]";
             default:
                 return "";

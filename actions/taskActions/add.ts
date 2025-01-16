@@ -1,4 +1,3 @@
-require('dotenv').config();
 
 import axios from "axios";
 
@@ -6,10 +5,10 @@ import { createTaskType } from "../../types/actionTypes/task";
 
 import { toast } from "react-hot-toast";
 
-export const createTask = (task: createTaskType) => {
-    const url = process.env.REACT_APP_API_URL + "tasks/create";
-    return async () => {
+export const createTask = async (task: createTaskType) => {
+    const url = "http://localhost:3000/api/tasks/create";
         try {
+            console.log(task);
             const response = await axios.post(url, task);
             if(response.status !== 200) {
                 toast.success("Task Created!!!");
@@ -18,7 +17,6 @@ export const createTask = (task: createTaskType) => {
             }
             return;
         } catch (error) {
-            toast.error(error.response.data);
+            console.log(error);
         }
-    };
 }

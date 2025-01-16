@@ -1,4 +1,3 @@
-require('dotenv').config();
 
 import axios from "axios";
 
@@ -7,16 +6,28 @@ import { signInUser } from "../../types/actionTypes/signin";
 import { toast } from "react-hot-toast";
 
 export const signinUser = (user: signInUser) => {
-    const url = process.env.REACT_APP_API_URL + "auth/login";
+    const url = "http://localhost:3000/api/auth/login";
     return async () => {
         try {
             const response = await axios.post(url, user);
-            const { email, token } = response.data;
+            const { email, role, token } = response.data;
             
-            toast.success("Logged in Success!!!");
-            return { email, token };
+            if(response.status === 200) {
+                toast.success("Successfuly Edited", {
+                    className:
+                      "bg-green-600 text-xl text-white font-semibold px-4 py-3 rounded-lg",
+                    icon: "😊",
+                    duration: 5000,
+                  });
+            }
+            else {
+                toast.error("SignIn Failed!!!");    
+                toast.error(response.data);
+            }
+            toast.success("Signup Success!!!");
+            return { email, role, token };
         } catch (error) {
-            toast.error(error.response.data);
+            console.log(error);
         }
     };
 }

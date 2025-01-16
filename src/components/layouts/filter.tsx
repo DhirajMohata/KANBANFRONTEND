@@ -29,9 +29,9 @@ const Filters = ( { handleFilter, handleSearch, handleUser} : FiltersProps ) => 
                     onChange={(e) => handleFilter(e.target.value)}
                 >
                     <option value="">All</option>
-                    <option value="Low">Easy</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Urgent">Hard</option>
+                    <option value="low">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="urgent">Hard</option>
                 </select>
                 <select 
                     className="bg-gray-200 dark:bg-gray-700 rounded-lg px-3 py-2 text-black/60 dark:text-gray-300"

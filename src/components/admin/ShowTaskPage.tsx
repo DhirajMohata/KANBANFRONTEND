@@ -4,12 +4,13 @@ import Tasks from './ShowTasks';
 
 const ShowTaskPage: React.FC = () => {
     const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
-
+    const [addedTask, setAddedTask] = useState<boolean>(false);
     const handleAddTaskClick = () => {
         setIsAddTaskOpen(true);
     };
 
     const handleCloseAddTask = () => {
+        setAddedTask(true);
         setIsAddTaskOpen(false);
     };
 
@@ -25,10 +26,10 @@ const ShowTaskPage: React.FC = () => {
                         Add Task
                     </button>
                 </div>
-                <Tasks />
+                <Tasks AddTask={addedTask}/>
             </div>
             {isAddTaskOpen && <AddTask 
-                title=""
+                title="To Do"
                 isOpen={isAddTaskOpen}
                 onClose={handleCloseAddTask}
                 editTask={null}/>

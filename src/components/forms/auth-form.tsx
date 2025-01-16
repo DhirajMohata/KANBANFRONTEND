@@ -32,6 +32,20 @@ export function AuthForm({ mode, action }: AuthFormProps) {
             placeholder="Password"
             required
           />
+        {mode === "signup" && (
+
+            <select
+              id="role"
+              name="role"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-sm rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              required
+            >
+              <option value="" disabled selected hidden>Select Role</option>
+              <option value="admin">Admin</option>
+              <option value="manager">Manager</option>
+              <option value="user">User</option>
+            </select>
+        )}
         </Form>
         <div className="mt-4 text-center text-sm">
           {mode === "signin" ? (

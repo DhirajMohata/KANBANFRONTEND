@@ -17,7 +17,7 @@ export interface FormProps {
 
   children: React.ReactNode;
 
-  action: (event: React.FormEvent<HTMLFormElement>, formData: FormData) => void;
+  action: (formData: any) => void;
 
   submitButton?: string;
 

@@ -12,7 +12,12 @@ export function Form({ children, action, submitButton = "Submit", className, ...
       onSubmit={(event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        action(event, formData);
+        const email = formData.get("email");
+        const name = formData.get("name");
+        const password = formData.get("password");
+        const role = formData.get("role");
+        const formValues = { email, name, password, role };
+        action(formValues);
       }}
       {...props}
     >

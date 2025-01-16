@@ -3,22 +3,36 @@ import { AuthForm } from "../../../components/forms/auth-form"
 import { useDispatch, useSelector } from "react-redux"
 import { login } from "../../../../store/slices/authSlice"
 import { RootState } from '../../../../store/store'
+import { signupUser } from '../../../../actions/authActions/signup'
 
 export default function SignUpPage() {
   const dispatch = useDispatch()
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn)
 
 
-  const handleSignUp = async (e: any) => {
-    e.preventDefault()
-    dispatch(login({ email: "email", token: "data_token" }))
-    localStorage.setItem("token", "data_token")
+  const handleSignUp = async (formValues : any) => {
+    const response = await signupUser(formValues)()
+    if(!response) return
+    dispatch(login({ email: response.email, token: response.token }))
+    localStorage.setItem(response.token, response.email)
+    localStorage.setItem("email", response.email)
     localStorage.setItem("isFirstTime", "true")
-    location.href = '/dashboard'
+    localStorage.setItem("role", response.role)
+    if(response.role === "admin")
+      location.href = "/admin"
+    else if(response.role === "user")
+      location.href = "/user"
+    else
+      location.href = "/manager" 
   }
 
   if(isLoggedIn || localStorage.getItem("token")) {
-    location.href = '/dashboard'
+    if(localStorage.getItem("role") === "admin")
+      location.href = '/admin'
+    else if(localStorage.getItem("role") === "user")
+      location.href = '/user'
+    else
+      location.href = '/manager'
   }
 
   return (

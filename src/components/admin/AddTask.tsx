@@ -7,6 +7,8 @@ import CloseSvg from "../../assets/svgs/closeSvg";
 import DeadlineSvg from "../../assets/svgs/deadlineSvg";
 import PrioritySvg from "../../assets/svgs/prioritySvg";
 
+import { createTask } from "../../../actions/taskActions/add";
+
 interface AddTaskProps {
     title: string;
     isOpen: boolean;
@@ -19,15 +21,14 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
     const [status, setStatus] = React.useState(title);
     const [main, setMain] = useState("");
     const [description, setDescription] = useState<string | undefined>("");
-    const [priority, setPriority] = useState("Low");
+    const [priority, setPriority] = useState("low");
     const [date, setDate] = useState("");
     const [assignedTo, setAssignedTo] = useState("");
-    const [parentTasks, setParentTasks] = useState<string[]>([
-        "Task 1",
-        "Task 2",
-        "Task 3",
-    ]);
+    const [parentTasks, setParentTasks] = useState<string[]>([]);
     const [parentTask, setParentTask] = useState("");
+    const [assignedToList, setAssignedToList] = useState<string[]>([]);
+    const assigned_by = localStorage.getItem("email");
+    const project = localStorage.getItem("projectId");
 
     useEffect(() => {
         if (editTask != null) {
@@ -40,6 +41,15 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
         }
     }, [editTask]);
 
+    useEffect(() => {
+        const teamMemberTemp = localStorage.getItem("teamMembers");
+        if(!teamMemberTemp) return;
+        const teamMembers = teamMemberTemp.split(",");
+        setAssignedToList(teamMembers);
+    }
+    , []);
+    
+
     const add = async () => {
         try {
             if (editTask != null) {
@@ -51,6 +61,20 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
                 });
             } else {
                 // Simulate task addition
+                const response = await createTask({
+                    title: main,
+                    status: status,
+                    project: project,
+                    description: description,
+                    priority: priority,
+                    deadline: date.toString(),
+                    assigned_to: assignedTo,
+                    assigned_by: assigned_by,
+                    parentTaskId: parentTask,
+                });
+                console.log(date)
+                console.log(assignedTo)
+                console.log(response)
                 toast.success("Successfully Added", {
                     className: "bg-green-600 text-xl text-white font-semibold px-4 py-3 rounded-lg",
                     icon: "😊",
@@ -109,10 +133,10 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
                                         value={status}
                                         onChange={(e) => setStatus(e.target.value.toString())}
                                     >
-                                        <option value="To Do">To Do</option>
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="Under Review">Under Review</option>
-                                        <option value="Finished">Finished</option>
+                                        <option value="todo">To Do</option>
+                                        <option value="inprogress">In Progress</option>
+                                        <option value="underreview">Under Review</option>
+                                        <option value="finished">Finished</option>
                                     </select>
                                 </td>
                             </tr>
@@ -157,9 +181,9 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
                                         value={priority}
                                         onChange={(e) => setPriority(e.target.value)}
                                     >
-                                        <option value="Low">Low</option>
-                                        <option value="Medium">Medium</option>
-                                        <option value="Urgent">Urgent</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="urgent">Urgent</option>
                                     </select>
                                 </td>
                             </tr>
@@ -173,9 +197,14 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
                                         value={assignedTo}
                                         onChange={(e) => setAssignedTo(e.target.value)}
                                     >
-                                        <option value="John Doe">John Doe</option>
-                                        <option value="Jane Smith">Jane Smith</option>
-                                        <option value="Alice Johnson">Alice Johnson</option>
+                                        <option value="" disabled>
+                                            Select a team member
+                                        </option>
+                                        {assignedToList.map((name) => (
+                                            <option key={name} value={name}>
+                                                {name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </td>
                             </tr>

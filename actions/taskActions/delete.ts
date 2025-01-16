@@ -1,11 +1,10 @@
-require('dotenv').config();
 
 import axios from "axios";
 
 import { toast } from "react-hot-toast";
 
 export const deleteTask = ({ taskId }) => {
-    const url = process.env.REACT_APP_API_URL + "tasks/delete";
+    const url = "http://localhost:3000/api/tasks/delete";
     return async () => {
         try {
             const response = await axios.put(url, { taskId });
