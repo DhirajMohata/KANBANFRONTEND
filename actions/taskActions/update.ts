@@ -1,31 +1,28 @@
 
 import axios from "axios";
 
-import { createTaskType } from "../../types/actionTypes/task";
-
 import { toast } from "react-hot-toast";
 
 export const updateTask = async ({ taskId, status }: { taskId: string; status: string }) => {
-    const url = "http://localhost:3000/api/tasks/update";
+    const url = "http://192.168.24.47:3000/api/tasks/update";
         try {
             const response = await axios.put(url, { taskId, status });
             return response.data;
         } catch (error) {
             console.log(error);
+            toast.error("Task Update Failed!!!");
         }
 }
 
-export const editTask = async (task: createTaskType) => {
-    const url = "http://localhost:3000/api/tasks/edit";
+export const editTasks = async (task: any) => {
+    const url = "http://192.168.24.47:3000/api/tasks/edit";
         try {
+            console.log(task);
             const response = await axios.put(url, task);
-            if(response.status !== 200) {
-                toast.success("Task Created!!!");
-            } else {
-                toast.error("Task Creation Failed!!!");
-            }
-            return;
+
+            return response.data;
         } catch (error) {
             console.log(error);
+            toast.error("Task Edition Failed!!!");
         }
 }

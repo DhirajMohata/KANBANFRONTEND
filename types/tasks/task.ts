@@ -30,5 +30,6 @@ export interface TaskState {
 export interface Taskboard {
     heading: string;
     tasks: Task[];
+    changed: () => void;
   }
   

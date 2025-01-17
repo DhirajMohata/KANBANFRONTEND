@@ -8,8 +8,9 @@ import DateSvg from "../../assets/svgs/dateSvg";
 import { LuHistory } from "react-icons/lu";
 import ShowLogs from "../layouts/showLogs";
 import ShowComments from "../layouts/showComments";
+import {deleteTask} from "../../../actions/taskActions/delete.ts";
 
-const TaskTable = ({ heading, tasks }: Taskboard) => {
+const   TaskTable = ({ heading, tasks, changed}: Taskboard) => {
     const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
     const [editTask, setEditTask] = useState<Task | null>(null);
     const [isShowLogsOpen, setIsShowLogsOpen] = useState(false);
@@ -17,6 +18,8 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
     const [isShowCommentsOpen, setIsShowCommentsOpen] = useState(false);
     const [selectedTaskDetails, setSelectedTaskDetails] = useState<any | null>(null);
     const [addSubtaskOpen, setAddSubtaskOpen] = useState(false);
+    const [parentTask, setParentTask] = useState<string | undefined>(undefined);
+    const [selectedTaskLogs, setSelectedTaskLogs] = useState<any | null>(null);
 
     const handleAddTaskClick = () => {
         setIsAddTaskOpen(true);
@@ -28,48 +31,52 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
     };
 
     const handleAddSubtaskClick = (task: Task) => {
+        setParentTask(task._id);
         setIsAddTaskOpen(true);
         setAddSubtaskOpen(true);
     };
 
     const handleDeleteTaskClick = (task: Task) => {
-        // Static delete logic
-        console.log(`Delete task with id: ${task._id}`);
+        deleteTask(task._id);
+        changed();
     };
 
     const handleCloseAddTask = () => {
         setIsAddTaskOpen(false);
         setAddSubtaskOpen(false);
         setEditTask(null);
+        changed();
     };
 
-    const handleShowLogsClick = (taskId: string) => {
-        setSelectedTaskId(taskId);
+    const handleShowLogsClick = (logs: any) => {
+        setSelectedTaskLogs(logs);
         setIsShowLogsOpen(true);
       };
     
       const handleCloseShowLogs = () => {
         setIsShowLogsOpen(false);
         setSelectedTaskId(null);
+        changed();
       };
     
-      const handleShowCommentsClick = (task: any) => {
-        setSelectedTaskDetails(task);
+      const handleShowCommentsClick = (taskDetail: any) => {
+        setSelectedTaskDetails(taskDetail);
         setIsShowCommentsOpen(true);
       };
     
       const handleCloseShowComments = () => {
         setIsShowCommentsOpen(false);
         setSelectedTaskDetails(null);
+        changed();
       };
 
     function getPriorityColor(priority: string) {
         switch (priority) {
-            case "Low":
+            case "low":
                 return "bg-[#0ECC5A]";
-            case "Medium":
+            case "medium":
                 return "bg-[#FFA235]";
-            case "Urgent":
+            case "urgent":
                 return "bg-[#FF6B6B]";
             default:
                 return "";
@@ -112,7 +119,7 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
                                                 </button>
                                                 <button
                                                         className="text-blue-500"
-                                                        onClick={() => handleShowLogsClick(task._id)}
+                                                        onClick={() => handleShowLogsClick(task.logs)}
                                                     >
                                                     <LuHistory size={20} />
                                                 </button>
@@ -170,16 +177,17 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
                 <p>Add new task </p>
                 <p className="text-2xl">+</p>
             </button>
-            <AddTask
+            {parentTask && (<AddTask
                 title={heading}
                 isOpen={isAddTaskOpen}
                 onClose={handleCloseAddTask}
                 editTask={editTask}
                 subTask={addSubtaskOpen}
-            />
-            {isShowLogsOpen && selectedTaskId && (
+                parentTask = {parentTask}
+            />)}
+            {isShowLogsOpen && (
                 <ShowLogs
-                taskId={selectedTaskId}
+                log={selectedTaskLogs}
                 isOpen={isShowLogsOpen}
                 onClose={handleCloseShowLogs}
                 />

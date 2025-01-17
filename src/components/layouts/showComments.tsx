@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseSvg from "../../assets/svgs/closeSvg";
 import { LuHistory, LuCommand } from "react-icons/lu";
+import { addComment } from  "../../../actions/comments/addComment";
 
 interface Comment {
     id: string;
     comment: string;
+    date: string;
 }
 
 interface TaskDetail {
+    _id: string;
     title: string;
     description: string;
     deadline: string;
+    comments: any;
 }
 
 interface ShowCommentsProps {
@@ -21,23 +25,31 @@ interface ShowCommentsProps {
 
 const ShowComments: React.FC<ShowCommentsProps> = ({ taskDetail, isOpen, onClose }) => {
     const [comment, setComment] = useState("");
-    const [comments, setComments] = useState<Comment[]>([
-        {
-            id: "1",
-            comment: "This is a comment",
-        },
-        {
-            id: "2",
-            comment: "This is another comment",
-        },
-    ]);
+    const [comments, setComments] = useState<Comment[]>([]);
 
-    const handleAddComment = () => {
+    useEffect(() => {
+        const formattedComments = taskDetail.comments.map((comment: { comment: any; created_at: any; }, index: any) => {
+            const date = new Date(comment.created_at);
+            const formattedDate = date.toLocaleDateString();
+            const formattedTime = date.toLocaleTimeString();
+            return {
+            id: String(index),
+            comment: comment.comment,
+            date: `${formattedDate} ${formattedTime}`,
+            };
+        });
+        setComments(formattedComments);
+    } , []);
+
+    const handleAddComment = async () => {
+        if (!comment) return;
+        await addComment({taskId: taskDetail._id, comment });
         setComments([
             ...comments,
             {
                 id: String(comments.length + 1),
                 comment,
+                date: new Date().toLocaleString(),
             },
         ]);
         setComment("");
@@ -66,10 +78,16 @@ const ShowComments: React.FC<ShowCommentsProps> = ({ taskDetail, isOpen, onClose
                     </div>
                     <div className="relative pl-8 border-l-2 max-h-[500px] overflow-y-auto hide-scrollbar border-gray-300 dark:border-gray-600">
                         {comments.map((comment) => (
-                            <div key={comment.id} className="flex items-start mb-7">
-                                <div className="mr-4 text-2xl text-blue-500 dark:text-blue-300"><LuCommand /></div>
+                            <div key={comment.id} className="items-start mb-7">
+                                <div className="flex items-start mb-5">
+                                    <div className="mr-4 text-2xl text-blue-500 dark:text-blue-300">
+                                        <LuCommand />
+                                    </div>
+
+                                    <p>{comment.date}</p>
+                                </div>
                                 <div>
-                                    <p className="text-xl text-gray-700 dark:text-gray-300 mt-1">{comment.comment}</p>
+                                    <p className="text-xl text-gray-700 font-semibold dark:text-gray-300 mt-1">{comment.comment}</p>
                                 </div>
                             </div>
                         ))}

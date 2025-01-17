@@ -1,5 +1,5 @@
 import CloseSvg from "../../assets/svgs/closeSvg";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LuHistory } from "react-icons/lu";
 
 interface Log {
@@ -10,82 +10,29 @@ interface Log {
 }
 
 interface ShowLogsProps {
-    taskId: string;
+    log: any;
     isOpen: boolean;
     onClose: () => void;
 }
 
-const ShowLogs: React.FC<ShowLogsProps> = ({ taskId, isOpen, onClose }) => {
-    const [logs, setLogs] = useState<Log[]>([
-        {
-            id: "1",
-            description: "We shipped your product via FedEx and it should arrive within 3-5 business days.",
-            date: "13th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "2",
-            description: "Added a new task",
-            date: "18th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "3",
-            description: "20th May 2021, 10:30am",
-            date: "20th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "1",
-            description: "We shipped your product via FedEx and it should arrive within 3-5 business days.",
-            date: "13th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "2",
-            description: "Assed a new task",
-            date: "18th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "3",
-            description: "Added a subtask",
-            date: "20th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "2",
-            description: "Added a new task",
-            date: "18th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "3",
-            description: "20th May 2021, 10:30am",
-            date: "20th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "1",
-            description: "We shipped your product via FedEx and it should arrive within 3-5 business days.",
-            date: "13th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "2",
-            description: "Assed a new task",
-            date: "18th May 2021",
-            icon: <LuHistory />,
-        },
-        {
-            id: "3",
-            description: "Added a subtask",
-            date: "20th May 2021",
-            icon: <LuHistory />,
-        },
-        
-    ]);
-
+const ShowLogs: React.FC<ShowLogsProps> = ({ log, isOpen, onClose }) => {
+    const [logs, setLogs] = useState<Log[]>([]);
+    useEffect(() => {
+        if (log) {
+            const logs = Object.keys(log).map((key) => {
+                const date = new Date(log[key].created_at);
+                const formattedDate = date.toLocaleDateString();
+                const formattedTime = date.toLocaleTimeString();
+                return {
+                    id: key,
+                    description: log[key].action,
+                    date: `${formattedDate} ${formattedTime}`,
+                    icon: <LuHistory />,
+                };
+            });
+            setLogs(logs);
+        }
+    }, []);
     return (
         <div
         className={`fixed inset-0 bg-gray-100 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-80 z-50 flex items-center justify-center transition-opacity duration-300 ${

@@ -9,6 +9,10 @@ const ShowTaskPage: React.FC = () => {
         setIsAddTaskOpen(true);
     };
 
+    if(localStorage.getItem('email') === null || localStorage.getItem('email') === undefined) {
+        window.location.href = '/auth/signin';
+    }
+
     const handleCloseAddTask = () => {
         setAddedTask(true);
         setIsAddTaskOpen(false);
@@ -32,7 +36,7 @@ const ShowTaskPage: React.FC = () => {
                 title="To Do"
                 isOpen={isAddTaskOpen}
                 onClose={handleCloseAddTask}
-                editTask={null}/>
+                />
             }
         
         </div>

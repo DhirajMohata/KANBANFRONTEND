@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface FiltersProps {
     handleFilter: (priority: string) => void;
     handleSearch: (search : string) => void;
@@ -7,8 +5,6 @@ interface FiltersProps {
 }
 
 const Filters = ( { handleFilter, handleSearch, handleUser} : FiltersProps ) => {
-    const [users, setUsers] = useState(["user1", "user2", "user3"])
-
     return (
         <div className="flex items-center mb-6 w-full justify-between">
             <div>
@@ -32,15 +28,6 @@ const Filters = ( { handleFilter, handleSearch, handleUser} : FiltersProps ) => 
                     <option value="low">Easy</option>
                     <option value="medium">Medium</option>
                     <option value="urgent">Hard</option>
-                </select>
-                <select 
-                    className="bg-gray-200 dark:bg-gray-700 rounded-lg px-3 py-2 text-black/60 dark:text-gray-300"
-                    onChange={(e) => handleUser(e.target.value)}
-                >
-                    <option value="">All Users</option>
-                    {users.map((users) => (
-                        <option value={users}>{users}</option>
-                    ))}
                 </select>
             </div>
 

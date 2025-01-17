@@ -1,22 +1,16 @@
 
 import axios from "axios";
-
+import { toast } from "react-hot-toast";
 import { createTaskType } from "../../types/actionTypes/task";
 
-import { toast } from "react-hot-toast";
-
 export const createTask = async (task: createTaskType) => {
-    const url = "http://localhost:3000/api/tasks/create";
+    const url = "http://192.168.24.47:3000/api/tasks/create";
         try {
             console.log(task);
             const response = await axios.post(url, task);
-            if(response.status !== 200) {
-                toast.success("Task Created!!!");
-            } else {
-                toast.error("Task Creation Failed!!!");
-            }
-            return;
+            return response.data;
         } catch (error) {
             console.log(error);
+            toast.error("Task Creation Failed!!!");
         }
 }

@@ -14,7 +14,7 @@ import { persistStore } from 'redux-persist'
 let persistor = persistStore(store);
 
 createRoot(document.getElementById('root')!).render(
-  <ThemeProvider attribute="class" defaultTheme="light">
+  <ThemeProvider attribute="class" defaultTheme="dark">
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
           <App />

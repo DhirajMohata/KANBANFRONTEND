@@ -6,12 +6,12 @@ import { signInUser } from "../../types/actionTypes/signin";
 import { toast } from "react-hot-toast";
 
 export const signinUser = (user: signInUser) => {
-    const url = "http://localhost:3000/api/auth/login";
+    const url = "http://192.168.24.47:3000/api/auth/login";
     return async () => {
         try {
             const response = await axios.post(url, user);
-            const { email, role, token } = response.data;
-            
+            const { email, role, projectId, teamMembers, token } = response.data;
+
             if(response.status === 200) {
                 toast.success("Successfuly Edited", {
                     className:
@@ -25,7 +25,7 @@ export const signinUser = (user: signInUser) => {
                 toast.error(response.data);
             }
             toast.success("Signup Success!!!");
-            return { email, role, token };
+            return { email, role, projectId, teamMembers, token };
         } catch (error) {
             console.log(error);
         }

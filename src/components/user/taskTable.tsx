@@ -14,8 +14,8 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
     null
   );
 
-  const handleShowLogsClick = (taskId: string) => {
-    setSelectedTaskId(taskId);
+  const handleShowLogsClick = (logs: any) => {
+    setSelectedTaskId(logs);
     setIsShowLogsOpen(true);
   };
 
@@ -36,11 +36,11 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
 
   function getPriorityColor(priority: string) {
     switch (priority) {
-      case "Low":
+      case "low":
         return "bg-[#0ECC5A]";
-      case "Medium":
+      case "medium":
         return "bg-[#FFA235]";
-      case "Urgent":
+      case "urgent":
         return "bg-[#FF6B6B]";
       default:
         return "";
@@ -77,7 +77,7 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
                       <div className="flex gap-2">
                         <button
                           className="text-blue-500"
-                          onClick={() => handleShowLogsClick(task._id)}
+                          onClick={() => handleShowLogsClick(task.logs)}
                         >
                           <LuHistory size={20} />
                         </button>
@@ -125,9 +125,9 @@ const TaskTable = ({ heading, tasks }: Taskboard) => {
         )}
       </Droppable>
 
-      {isShowLogsOpen && selectedTaskId && (
+      {isShowLogsOpen && (
         <ShowLogs
-          taskId={selectedTaskId}
+          log={selectedTaskId}
           isOpen={isShowLogsOpen}
           onClose={handleCloseShowLogs}
         />

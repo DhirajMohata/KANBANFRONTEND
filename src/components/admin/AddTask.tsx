@@ -8,6 +8,7 @@ import DeadlineSvg from "../../assets/svgs/deadlineSvg";
 import PrioritySvg from "../../assets/svgs/prioritySvg";
 
 import { createTask } from "../../../actions/taskActions/add";
+import { editTasks } from "../../../actions/taskActions/update";
 
 interface AddTaskProps {
     title: string;
@@ -15,17 +16,16 @@ interface AddTaskProps {
     onClose: () => void;
     editTask?: any;
     subTask?: boolean;
+    parentTask?: string;
 }
 
-const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, subTask }) => {
+const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, subTask, parentTask}) => {
     const [status, setStatus] = React.useState(title);
     const [main, setMain] = useState("");
     const [description, setDescription] = useState<string | undefined>("");
     const [priority, setPriority] = useState("low");
     const [date, setDate] = useState("");
     const [assignedTo, setAssignedTo] = useState("");
-    const [parentTasks, setParentTasks] = useState<string[]>([]);
-    const [parentTask, setParentTask] = useState("");
     const [assignedToList, setAssignedToList] = useState<string[]>([]);
     const assigned_by = localStorage.getItem("email");
     const project = localStorage.getItem("projectId");
@@ -34,10 +34,10 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
         if (editTask != null) {
             setMain(editTask.title);
             setDescription(editTask.description);
+            setStatus(editTask.status);
             setPriority(editTask.priority);
             setDate(editTask.date);
             setAssignedTo(editTask.assignedTo);
-            setParentTask(editTask.parentTask);
         }
     }, [editTask]);
 
@@ -51,17 +51,31 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
     
 
     const add = async () => {
+
+        console.log(assigned_by);
         try {
             if (editTask != null) {
                 // Simulate task update
+                await editTasks({
+                    title: main,
+                    status: status,
+                    description: description,
+                    priority: priority,
+                    assigned_to: assignedTo,
+                    assigned_by: assigned_by,
+                    taskId: editTask._id,
+                });
+                
+                onClose();
                 toast.success("Successfully Edited", {
                     className: "bg-green-600 text-xl text-white font-semibold px-4 py-3 rounded-lg",
                     icon: "😊",
                     duration: 5000,
                 });
+
             } else {
                 // Simulate task addition
-                const response = await createTask({
+                await createTask({
                     title: main,
                     status: status,
                     project: project,
@@ -72,16 +86,14 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
                     assigned_by: assigned_by,
                     parentTaskId: parentTask,
                 });
-                console.log(date)
-                console.log(assignedTo)
-                console.log(response)
+                
                 toast.success("Successfully Added", {
                     className: "bg-green-600 text-xl text-white font-semibold px-4 py-3 rounded-lg",
                     icon: "😊",
                     duration: 5000,
                 });
+                onClose();
             }
-            onClose();
         } catch (error) {
             console.error("Adding task failed:", error);
         }
@@ -208,26 +220,6 @@ const AddTask: React.FC<AddTaskProps> = ({ title, isOpen, onClose, editTask, sub
                                     </select>
                                 </td>
                             </tr>
-                            {subTask && (
-                                <tr>
-                                    <td className="py-2 pr-4 inline-flex gap-2 mb-5">
-                                        <label className="block text-gray-700 dark:text-gray-300">Parent Task</label>
-                                        </td>
-                                        <td className="mb-5">
-                                            <select
-                                                className="w-full p-2 border-none rounded focus:outline-none focus:ring-0 dark:bg-gray-700 dark:text-white"
-                                                value={assignedTo}
-                                                onChange={(e) => setParentTask(e.target.value)}
-                                            >
-                                                {parentTasks.map((task) => (
-                                                    <option key={task} value={task}>
-                                                        {task}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </td>
-                                    </tr>
-                                )}
                         </tbody>
                     </table>
                     <div className="flex mt-4">

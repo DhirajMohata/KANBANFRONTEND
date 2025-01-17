@@ -1,22 +1,22 @@
 
 import axios from "axios";
-
+import { toast } from "react-hot-toast";
 import { createProjectType } from "../../types/actionTypes/project";
 
 
 export const createProject = async (project: createProjectType) => {
-    const url = "http://localhost:3000/api/projects/create";
+    const url = "http://192.168.24.47:3000/api/projects/create";
     try {
-        console.log(project);
         const response = await axios.post(url, project);
         return;
     } catch (error) {
         console.log(error);
+        toast.error("Project Creation Failed!!!");
     }
 }
 
 export const getProjects = async (email: string) => {
-    const url = "http://localhost:3000/api/projects/";
+    const url = "http://192.168.24.47:3000/api/projects/";
     try {
         console.log(email);
         const response = await axios.post(url, { email });
@@ -24,11 +24,12 @@ export const getProjects = async (email: string) => {
         return response.data;
     } catch (error) {
         console.log(error);
+        toast.error("Project fetching Failed!!!");
     }
 }
 
 export const getUsers = async () => {
-    const url = "http://localhost:3000/api/projects/users";
+    const url = "http://192.168.24.47:3000/api/projects/users";
     try {
         
         const response = await axios.get(url);
@@ -42,11 +43,12 @@ export const getUsers = async () => {
         return users;
     } catch (error) {
         console.log(error);
+        toast.error("User fetching Failed!!!");
     }
 }
 
 export const getManagers = async () => {
-    const url = "http://localhost:3000/api/projects/managers";
+    const url = "http://192.168.24.47:3000/api/projects/managers";
     try {
         const response = await axios.get(url);
         const managers = response.data.map((manager: { name: string, id: string }) => {
@@ -59,11 +61,12 @@ export const getManagers = async () => {
         return managers;
     } catch (error) {
         console.log(error);
+        toast.error("Manager fetching Failed!!!");
     }
 }
 
 export const getProjectTeamMeambers = async (projectId: string) => {
-    const url = `http://localhost:3000/api/projects/team`;
+    const url = `http://192.168.24.47:3000/api/projects/team`;
     try {
         console.log(projectId);
         const response = await axios.post(url, { projectId });
@@ -71,5 +74,6 @@ export const getProjectTeamMeambers = async (projectId: string) => {
         return response.data;
     } catch (error) {
         console.log(error);
+        toast.error("Team fetching Failed!!!");
     }
 }

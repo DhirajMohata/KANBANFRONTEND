@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import AddTask from './AddTask';
 import Tasks from './Tasks';
 
-const ManagerDashboard: React.FC = () => {
+const ShowTaskPage: React.FC = () => {
     const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+    const [addedTask, setAddedTask] = useState<boolean>(false);
+
+    if(localStorage.getItem('email') === null || localStorage.getItem('email') === undefined) {
+        window.location.href = '/auth/signin';
+    }
 
     const handleAddTaskClick = () => {
         setIsAddTaskOpen(true);
@@ -11,6 +16,7 @@ const ManagerDashboard: React.FC = () => {
 
     const handleCloseAddTask = () => {
         setIsAddTaskOpen(false);
+        setAddedTask(true);
     };
 
     return (
@@ -18,24 +24,35 @@ const ManagerDashboard: React.FC = () => {
             <div className="container mx-auto py-5">
                 <div className="flex justify-between items-center mb-14">
                     <h1 className="text-2xl font-bold">Project Name</h1>
-                    <button
-                        onClick={handleAddTaskClick}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Add Task
-                    </button>
+                    <div className='inline-flex gap-4 items-center'>
+                        <button
+                            onClick={handleAddTaskClick}
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        >
+                            Add Task
+                        </button>
+                        <button
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                            onClick={() => {
+                                localStorage.clear();
+                                window.location.href = '/auth/signin';
+                            }}
+                        >
+                            Logout
+                        </button>
+                    </div>
                 </div>
-                <Tasks />
+                <Tasks AddTask={addedTask}/>
             </div>
             {isAddTaskOpen && <AddTask 
-                title=""
+                title="To Do"
                 isOpen={isAddTaskOpen}
                 onClose={handleCloseAddTask}
-                editTask={null}/>
+                />
             }
         
         </div>
     );
 };
 
-export default ManagerDashboard;
+export default ShowTaskPage;

@@ -22,8 +22,16 @@ export default function SignUpPage() {
       location.href = "/admin"
     else if(response.role === "user")
       location.href = "/user"
-    else
+    else {
+      if(response.projectId) {
+        localStorage.setItem("projectId", response.projectId)
+      }
+      if(response.teamMembers) {
+        console.log(response.teamMembers)
+        localStorage.setItem("teamMembers", response.teamMembers)
+      }
       location.href = "/manager" 
+    } 
   }
 
   if(isLoggedIn || localStorage.getItem("token")) {

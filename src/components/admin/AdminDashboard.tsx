@@ -8,6 +8,11 @@ const AdminDashboard: React.FC = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isFirstTime, setIsFirstTime] = useState(false);
 
+
+    if(localStorage.getItem('email') === null || localStorage.getItem('email') === undefined) {
+        window.location.href = '/auth/signin';
+    }
+
     useEffect(() => {
         if (localStorage.getItem('isFirstTime') === 'true') {
           setIsFirstTime(true)
@@ -28,12 +33,23 @@ const AdminDashboard: React.FC = () => {
             <div className="container mx-auto p-6">
                 <div className="flex justify-between items-center mb-14">
                     <h1 className="text-3xl font-bold">WELCOME TO KANBAN : ADMIN</h1>
-                    <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-                        onClick={() => setIsDialogOpen(true)}
-                    >
-                        Add Project
-                    </button>
+                    <div className='inline-flex gap-4 items-center'>
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            onClick={() => setIsDialogOpen(true)}
+                        >
+                            Add Project
+                        </button>
+                        <button
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                            onClick={() => {
+                                localStorage.clear();
+                                window.location.href = '/auth/signin';
+                            }}
+                        >
+                            Logout
+                        </button>
+                    </div>
                 </div>
 
                 <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
